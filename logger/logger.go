@@ -202,30 +202,55 @@ func Trace(format string, args ...interface{}) {
 }
 
 // Info logs down a log with info level.
-func Info(format string, args ...interface{}) {
+func Infof(format string, args ...interface{}) {
 	log(kLogLevelInfo, format, args)
 }
 
 // Warn logs down a log with warning level.
-func Warn(format string, args ...interface{}) {
+func Warnf(format string, args ...interface{}) {
 	log(kLogLevelWarn, format, args)
 }
 
 // Error logs down a log with error level.
-func Error(format string, args ...interface{}) {
+func Errorf(format string, args ...interface{}) {
 	log(kLogLevelError, format, args)
 }
 
 // Panic logs down a log with panic level and then panic("panic log") is called.
-func Panic(format string, args ...interface{}) {
+func Panicf(format string, args ...interface{}) {
 	log(kLogLevelPanic, format, args)
 	panic("panic log")
 }
 
 // Abort logs down a log with abort level and then os.Exit(-1) is called.
-func Abort(format string, args ...interface{}) {
+func Abortf(format string, args ...interface{}) {
 	log(kLogLevelAbort, format, args)
 	os.Exit(-1)
+}
+
+// Info logs down a log with info level.
+func Info(args ...interface{}) {
+	Infof("", args)
+}
+
+// Warn logs down a log with warning level.
+func Warn(format string, args ...interface{}) {
+	Warnf("", args)
+}
+
+// Error logs down a log with error level.
+func Error(format string, args ...interface{}) {
+	Errorf("", args)
+}
+
+// Panic logs down a log with panic level and then panic("panic log") is called.
+func Panic(format string, args ...interface{}) {
+	Panicf("", args)
+}
+
+// Abort logs down a log with abort level and then os.Exit(-1) is called.
+func Abort(format string, args ...interface{}) {
+	Abortf("", args)
 }
 
 // logger configuration
@@ -500,7 +525,12 @@ func log(logLevel int, format string, args []interface{}) {
 
 	t := time.Now()
 	genLogPrefix(buf, logLevel, 3, t)
-	fmt.Fprintf(buf, format, args...)
+
+	if format == "" {
+		fmt.Fprint(buf, args...)
+	} else {
+		fmt.Fprintf(buf, format, args...)
+	}
 	buf.WriteByte('\n')
 	output := buf.Bytes()
 	if gConf.logThrough() {
