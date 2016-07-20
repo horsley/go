@@ -195,7 +195,7 @@ func SetLogFilenameLineNum(on bool) {
 
 // Trace logs down a log with trace level.
 // If parameter logTrace of logger.Init() is set to be false, no trace logs will be logged down.
-func Trace(format string, args ...interface{}) {
+func Tracef(format string, args ...interface{}) {
 	if gConf.logTrace() {
 		log(kLogLevelTrace, format, args)
 	}
@@ -228,29 +228,39 @@ func Abortf(format string, args ...interface{}) {
 	os.Exit(-1)
 }
 
+// Trace logs down a log with trace level.
+// If parameter logTrace of logger.Init() is set to be false, no trace logs will be logged down.
+func Trace(format string, args ...interface{}) {
+	if gConf.logTrace() {
+		log(kLogLevelTrace, "", args)
+	}
+}
+
 // Info logs down a log with info level.
 func Info(args ...interface{}) {
-	Infof("", args)
+	log(kLogLevelInfo, "", args)
 }
 
 // Warn logs down a log with warning level.
 func Warn(format string, args ...interface{}) {
-	Warnf("", args)
+	log(kLogLevelWarn, "", args)
 }
 
 // Error logs down a log with error level.
 func Error(format string, args ...interface{}) {
-	Errorf("", args)
+	log(kLogLevelError, "", args)
 }
 
 // Panic logs down a log with panic level and then panic("panic log") is called.
 func Panic(format string, args ...interface{}) {
-	Panicf("", args)
+	log(kLogLevelPanic, "", args)
+	panic("panic log")
 }
 
 // Abort logs down a log with abort level and then os.Exit(-1) is called.
 func Abort(format string, args ...interface{}) {
-	Abortf("", args)
+	log(kLogLevelAbort, "", args)
+	os.Exit(-1)
 }
 
 // logger configuration
