@@ -539,7 +539,11 @@ func log(logLevel int, format string, args []interface{}) {
 	genLogPrefix(buf, logLevel, 3, t)
 
 	if format == "" {
-		fmt.Fprint(buf, args...)
+		s := fmt.Sprint(args)
+		if len(s) > 2 {
+			s = s[1 : len(s)-1]
+		}
+		fmt.Fprint(buf, s)
 	} else {
 		fmt.Fprintf(buf, format, args...)
 	}
