@@ -495,13 +495,15 @@ func genLogPrefix(buf *buffer, logLevel, skip int, t time.Time) {
 	h, m, s := t.Clock()
 
 	// time
-	buf.tmp[0] = gLogLevelChar[logLevel]
-	buf.twoDigits(1, h)
-	buf.tmp[3] = ':'
-	buf.twoDigits(4, m)
-	buf.tmp[6] = ':'
-	buf.twoDigits(7, s)
-	buf.Write(buf.tmp[:9])
+	buf.tmp[0] = '['
+	buf.tmp[1] = gLogLevelChar[logLevel]
+	buf.tmp[2] = ']'
+	buf.twoDigits(3, h)
+	buf.tmp[5] = ':'
+	buf.twoDigits(6, m)
+	buf.tmp[8] = ':'
+	buf.twoDigits(9, s)
+	buf.Write(buf.tmp[:11])
 
 	var pc uintptr
 	var ok bool
@@ -527,7 +529,7 @@ func genLogPrefix(buf *buffer, logLevel, skip int, t time.Time) {
 		}
 	}
 
-	buf.WriteString("] ")
+	buf.WriteString(" ")
 }
 
 func log(logLevel int, format string, args []interface{}) {
