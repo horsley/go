@@ -101,7 +101,7 @@ import (
 	"fmt"
 	"os"
 	"os/user"
-	"path"
+	"path/filepath"
 	"runtime"
 	"sort"
 	"strings"
@@ -287,7 +287,6 @@ func (conf *config) setLogPath(logpath string) {
 
 	conf.logPath = logpath + "/"
 	conf.pathPrefix = conf.logPath + gProgname + "." + host + "." + username + ".log."
-
 	for i := 0; i != len(gFullSymlinks); i++ {
 		gFullSymlinks[i] = conf.logPath + gSymlinks[i]
 	}
@@ -363,7 +362,7 @@ func (l *logger) log(t time.Time, data []byte) {
 		if err != nil {
 			l.errlog(t, nil, err)
 		}
-		err = os.Symlink(path.Base(filename), gFullSymlinks[l.level])
+		err = os.Symlink(filepath.Base(filename), gFullSymlinks[l.level])
 		if err != nil {
 			l.errlog(t, nil, err)
 		}
@@ -477,7 +476,7 @@ func genLogPrefix(buf *buffer, logLevel, skip int, t time.Time) {
 		pc, file, line, ok = runtime.Caller(skip)
 		if ok {
 			buf.WriteByte(' ')
-			buf.WriteString(path.Base(file))
+			buf.WriteString(filepath.Base(file))
 			buf.tmp[0] = ':'
 			n := buf.someDigits(1, line)
 			buf.Write(buf.tmp[:n+1])
@@ -518,7 +517,7 @@ func log(logLevel int, format string, args []interface{}) {
 	gBufPool.putBuffer(buf)
 }
 
-var gProgname = path.Base(os.Args[0])
+var gProgname = filepath.Base(os.Args[0])
 
 var gLogLevelNames = [kLogLevelMax]string{
 	"TRACE", "INFO", "WARN", "ERROR", "PANIC", "ABORT",
