@@ -367,8 +367,8 @@ func (l *logger) log(t time.Time, data []byte) {
 			}
 		}
 
-		filename := fmt.Sprintf("%s%s.%d%02d%02d-%012d", gConf.pathPrefix, gLogLevelNames[l.level],
-			y, m, d, (t.UnixNano()/1000)%1000000000000)
+		filename := fmt.Sprintf("%s%s.%d%02d%02d-%d", gConf.pathPrefix, gLogLevelNames[l.level],
+			y, m, d, t.Unix())
 		newfile, err := os.OpenFile(filename, os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0644)
 		if err != nil {
 			l.errlog(t, data, err)
