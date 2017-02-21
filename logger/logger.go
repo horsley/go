@@ -390,6 +390,10 @@ func (l *logger) log(t time.Time, data []byte) {
 
 		l.file.Close()
 		l.file = newfile
+
+		if redirectStdErr {
+			redirectStderr(newfile)
+		}
 		l.day = d
 		l.size = 0
 
